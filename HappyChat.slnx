@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="HappyChat.Api/HappyChat.Api.csproj" />
+  <Project Path="HappyChat.Application/HappyChat.Application.csproj" />
+  <Project Path="HappyChat.Core/HappyChat.Core.csproj" />
+  <Project Path="HappyChat.Infrastructure/HappyChat.Infrastructure.csproj" />
+  <Project Path="HappyChat.Shared/HappyChat.Shared.shproj" />
+</Solution>
