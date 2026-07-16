@@ -6,7 +6,7 @@ public class Message : BaseEntity
 {
     public int ChatId { get; set; }
     public int SenderId { get; set; }
-    public int? ReploiedTo { get; set; }
+    public int? RepliedTo { get; set; }
     public string Content { get; set; }
     public MessageStatus Status { get; set; } = MessageStatus.Sent;
 

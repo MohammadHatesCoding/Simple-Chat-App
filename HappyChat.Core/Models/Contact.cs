@@ -15,6 +15,5 @@ public class Contact : BaseEntity
 
     #region NavigationProperties
     public User Owner { get; set; }
-    public User ContactUser { get; set; }
     #endregion
 }
