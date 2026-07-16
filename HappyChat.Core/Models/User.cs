@@ -26,7 +26,10 @@ public class User : BaseEntity
     #region NavigationProperties
     public List<Contact>? Contacts { get; set; }
     public List<UserChat>? Chats { get; set; }
+    public List<Message> Messages { get; set; }
     public List<UserRole>? UserRoles { get; set; }
+
+
     public List<RefreshToken> RefreshTokens { get; set; }
     #endregion
 }

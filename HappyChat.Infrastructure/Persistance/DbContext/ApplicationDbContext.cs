@@ -1,6 +1,8 @@
 ﻿using HappyChat.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
+using HappyChat.Infrastructure.Persistance.DbContext;
+
 public class ApplicationDbContext : DbContext
 {
     public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)

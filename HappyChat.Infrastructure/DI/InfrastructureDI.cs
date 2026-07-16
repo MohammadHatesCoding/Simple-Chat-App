@@ -32,6 +32,7 @@ public static class InfrastructureDI
         services.AddScoped<IRoleRepository, RoleRepository>();
         services.AddScoped<IUserChatRepository, UserChatRepository>();
         services.AddScoped<IRefreshTokenRepository, RefreshTokenRepository>();
+        services.AddScoped<IUserRoleRepository, UserRoleRepository>();
         services.AddScoped<IUnitOfWork, UnitOfWork>();
         #endregion
 
@@ -43,13 +44,6 @@ public static class InfrastructureDI
         services.AddHttpContextAccessor();
         services.AddScoped<ICurrentUserService, CurrentUserService>();
         #endregion
-
-        var context = services.BuildServiceProvider().GetRequiredService<ApplicationDbContext>();
-        var passwordHasher = services.BuildServiceProvider().GetRequiredService<IPasswordService>();
-
-        var seeder = new InitialDataSeeder(context, passwordHasher);
-
-        seeder.SeedDataAsync();
 
         return services;
     }

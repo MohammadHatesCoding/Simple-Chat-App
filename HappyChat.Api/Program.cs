@@ -1,9 +1,11 @@
-using HappyChat.Infrastructure.DI;
-using TaskManager.Business.Profiles;
+using HappyChat.Application.Contracts.Services;
 using HappyChat.Application.DI;
+using HappyChat.Infrastructure.DI;
+using HappyChat.Infrastructure.Persistance.DbContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using TaskManager.Business.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,6 +48,16 @@ builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
 builder.Services.AddOpenApi();
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+    var passwordService = scope.ServiceProvider.GetRequiredService<IPasswordService>();
+
+    var seeder = new InitialDataSeeder(context, passwordService);
+
+    await seeder.SeedDataAsync();
+}
 
 if (app.Environment.IsDevelopment())
 {
