@@ -5,5 +5,5 @@ namespace HappyChat.Application.Contracts.Repositories;
 
 public interface IUserRepository : IBaseRepository<User>
 {
-
+    Task<User?> GetByPhoneNumberWithRolesAsync(string phoneNumber);
 }

@@ -21,7 +21,8 @@ public class CheckOTPCommandHandler : IRequestHandler<CheckOTPCommand, CheckOTPR
     }
     public async Task<CheckOTPResponse> Handle(CheckOTPCommand request, CancellationToken cancellationToken)
     {
-        var user = (await _unitOfWork.UserRepository.FindAsync(x => x.PhoneNumber == request.command.PhoneNumber)).FirstOrDefault();
+        var user = await _unitOfWork.UserRepository
+            .GetByPhoneNumberWithRolesAsync(request.command.PhoneNumber);
 
         bool check = _otpService.VerifyOtpAsync(user.OtpHash, request.command.otp);
 

@@ -77,4 +77,16 @@ public class UserController : BaseController
 
         return result;
     }
+
+    [HttpPost]
+    [Route(nameof(SendNewOtp))]
+    public async Task<SendNewOtpResponse> SendNewOtp(SendNewOtpCommand request, CancellationToken cancellationToken)
+    {
+        var result = await _mediatr.Send<SendNewOtpResponse>(request, cancellationToken);
+
+        if (result is null)
+            throw new Exception();
+
+        return result;
+    }
 }

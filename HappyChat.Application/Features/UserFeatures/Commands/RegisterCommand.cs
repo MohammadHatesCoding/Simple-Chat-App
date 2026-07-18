@@ -16,9 +16,6 @@ public class RegisterCommandValidator : AbstractValidator<RegisterCommand>
             .NotEmpty()
             .MaximumLength(700);
 
-        RuleFor(x => x.command.PhoneNumber)
-            .NotEmpty()
-            .MaximumLength(13);
     }
 }
 

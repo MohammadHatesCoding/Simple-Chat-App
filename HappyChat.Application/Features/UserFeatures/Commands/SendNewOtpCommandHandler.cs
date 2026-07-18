@@ -1,28 +1,30 @@
-﻿using HappyChat.Application.Contracts;
+﻿using AutoMapper;
+using HappyChat.Application.Contracts;
 using HappyChat.Application.Contracts.Services;
 using HappyChat.Application.Features.UserFeatures.DTO;
+using HappyChat.Core.Models;
 using MediatR;
 
 namespace HappyChat.Application.Features.UserFeatures.Commands;
 
-public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
+public class SendNewOtpCommandHandler : IRequestHandler<SendNewOtpCommand, SendNewOtpResponse>
 {
     private readonly IUnitOfWork _unitOfWork;
+    private readonly IMapper _mapper;
     private readonly IOTPService _oTPService;
-    public LoginCommandHandler(IUnitOfWork unitOfWork, IOTPService oTPService)
+    public SendNewOtpCommandHandler(IUnitOfWork unitOfWork, IMapper mapper, IOTPService oTPService)
     {
+        _mapper = mapper;
         _unitOfWork = unitOfWork;
         _oTPService = oTPService;
     }
-    public async Task<LoginResponse> Handle(LoginCommand request, CancellationToken cancellationToken)
+
+    public async Task<SendNewOtpResponse> Handle(SendNewOtpCommand request, CancellationToken cancellationToken)
     {
         try
         {
             var user = (await _unitOfWork.UserRepository
                 .FindAsync(x => x.PhoneNumber.ToLower() == request.command.PhoneNumber.ToLower())).FirstOrDefault();
-
-            if (user == null || !user.IsActive)
-                throw new UnauthorizedAccessException();
 
             var otp = _oTPService.GenerateOtpAsync();
 
@@ -32,9 +34,7 @@ public class LoginCommandHandler : IRequestHandler<LoginCommand, LoginResponse>
 
             Console.WriteLine($"Your otp is: {otp.rawOtp}");
 
-            await _unitOfWork.CommitAsync(cancellationToken);
-
-            return new LoginResponse(Success: true);
+            return new SendNewOtpResponse(Success: true);
         }
         catch (Exception ex)
         {

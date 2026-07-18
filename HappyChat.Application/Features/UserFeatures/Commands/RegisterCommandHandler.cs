@@ -37,6 +37,8 @@ public class RegisterCommandHandler : IRequestHandler<RegisterCommand, RegisterR
 
             user.OTPDuration = DateTime.UtcNow.AddSeconds(60);
 
+            Console.WriteLine($"Your otp is: {otp.rawOtp}");
+
             await _unitOfWork.CommitAsync(cancellationToken);
 
             return new RegisterResponse(Id: user.Id);

@@ -4,12 +4,34 @@ using HappyChat.Infrastructure.DI;
 using HappyChat.Infrastructure.Persistance.DbContext;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi;
 using System.Text;
 using TaskManager.Business.Profiles;
 
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddSwaggerGen(options =>
+{
+    options.SwaggerDoc("v1", new OpenApiInfo { Title = "TaskManager Api", Version = "v1" });
+    options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+    {
+        Name = "Authorization",
+        Type = SecuritySchemeType.ApiKey, //This will change to SecuritySchemeType.Http later
+        Scheme = "Bearer",
+        BearerFormat = "JWT",
+        In = ParameterLocation.Header,
+        Description = "JWT Authorization header using the Bearer scheme. Example: 'Bearer {token}'"
+    });
+
+    options.AddSecurityRequirement(document =>
+        new OpenApiSecurityRequirement
+        {
+            [new OpenApiSecuritySchemeReference("Bearer", document)] = []
+        }
+    );
+});
 
 #region JWT
 builder.Services.AddAuthentication(options =>
@@ -45,7 +67,6 @@ builder.Services.AddServices(builder.Configuration);
 builder.Services.AddApplication();
 //builder.Services.AddValidators(builder.Configuration);
 builder.Services.AddAutoMapper(cfg => { }, typeof(MappingProfile));
-builder.Services.AddOpenApi();
 
 var app = builder.Build();
 
@@ -61,11 +82,16 @@ using (var scope = app.Services.CreateScope())
 
 if (app.Environment.IsDevelopment())
 {
-    app.MapOpenApi();
+    app.UseSwagger();
+    app.UseSwaggerUI(options =>
+    {
+        options.SwaggerEndpoint("/swagger/v1/swagger.json", "HappyChat Api v1");
+    });
 }
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

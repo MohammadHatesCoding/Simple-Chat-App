@@ -165,6 +165,9 @@ namespace HappyChat.Infrastructure.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ChatId");
@@ -172,6 +175,8 @@ namespace HappyChat.Infrastructure.Migrations
                     b.HasIndex("RepliedTo");
 
                     b.HasIndex("SenderId");
+
+                    b.HasIndex("UserId");
 
                     b.ToTable("Message", (string)null);
                 });
@@ -417,6 +422,10 @@ namespace HappyChat.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("HappyChat.Core.Models.User", null)
+                        .WithMany("Messages")
+                        .HasForeignKey("UserId");
+
                     b.Navigation("Chat");
 
                     b.Navigation("RepliedMessage");
@@ -490,6 +499,8 @@ namespace HappyChat.Infrastructure.Migrations
                     b.Navigation("Chats");
 
                     b.Navigation("Contacts");
+
+                    b.Navigation("Messages");
 
                     b.Navigation("RefreshTokens");
 
